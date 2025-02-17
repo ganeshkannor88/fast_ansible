@@ -1,0 +1,25 @@
+---
+- name: Install and start Nginx
+  hosts: all
+  become: yes
+  tasks:
+    - name: Install Nginx
+      yum:
+        name: nginx
+        state: present
+
+    - name: Start and enable Nginx service
+      service:
+        name: nginx
+        state: started
+        enabled: yes
+
+    - name: Ensure Nginx is running
+      uri:
+        url: http://localhost
+        return_content: yes
+      register: nginx_status
+
+    - name: Print Nginx status
+      debug:
+        var: nginx_status.status
